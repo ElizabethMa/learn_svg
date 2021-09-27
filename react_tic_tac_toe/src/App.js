@@ -65,7 +65,14 @@ class Game extends React.Component {
         </li>
       );
     });
-    const status = winner ? `Winner: ${winner}` : `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
+    let status
+    if (winner) {
+      status = `Winner: ${winner}`
+    } else if (this.state.stepNumber === 9) {
+      status = 'no one wins'
+    } else {
+      status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`
+    }
     return (
       <div className="game">
         <div className="game-board">
