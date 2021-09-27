@@ -22,7 +22,8 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    const {winner, winnerLocations} = calculateWinner(current.squares);
+    if (winner || squares[i]) {
       // 当有玩家胜出时，或者某个 Square 已经被填充时，该函数不做任何处理直接返回。
       return;
     }
@@ -53,7 +54,7 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const {winner, locations} = calculateWinner(current.squares);
     const moves = history.map((step, move) => {
       const row = Math.floor(step.point / 3);
       const col = step.point % 3;
@@ -68,7 +69,7 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board squares={current.squares} onClick={(i)=>this.handleClick(i)} />
+          <Board squares={current.squares} winnerLocations={locations} onClick={(i)=>this.handleClick(i)} />
         </div>
         <div className="game-info">
           <div>{status}</div>

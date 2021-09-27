@@ -2,16 +2,20 @@ import React from 'react'
 import Square from './Square'
 
 class Board extends React.Component {
-  renderSquare(i) {
-    return <Square value={this.props.squares[i]} onClick={() => this.props.onClick(i)}/>;
+  renderSquare(i, key) {
+    console.log(this.props.winnerLocations, i, this.props.winnerLocations.indexOf(i))
+    return <Square 
+      key={key}
+      value={this.props.squares[i]} 
+      className={this.props.winnerLocations.indexOf(i) > -1 ? "winner" : ""} 
+      onClick={() => this.props.onClick(i)}
+    />;
   }
-
-
 
   render() {
     const rows = [0, 1, 2].map((value, rowIndex) => {
-      const cols = [0, 1, 2].map((value, colIndex) => this.renderSquare(rowIndex * 3 + colIndex))
-      return <div className="board-row">{cols}</div>
+      const cols = [0, 1, 2].map((value, colIndex) => this.renderSquare(rowIndex * 3 + colIndex, colIndex))
+      return <div key={rowIndex} className="board-row">{cols}</div>
     });
     return (
       <div>
@@ -35,10 +39,10 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return {winner: squares[a], locations: lines[i]};
     }
   }
-  return null;
+  return {winner: null, locations: [null, null, null]};
 }
 
 export default Board;
