@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css';
 
 import Board, {calculateWinner} from './components/Board'
+import Clock from './components/Clock'
 
 
 class Game extends React.Component {
@@ -74,16 +75,19 @@ class Game extends React.Component {
       status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`
     }
     return (
-      <div className="game">
-        <div className="game-board">
-          <Board squares={current.squares} winnerLocations={locations} onClick={(i)=>this.handleClick(i)} />
+      <React.Fragment  >
+        <div className="game">
+          <div className="game-board">
+            <Board squares={current.squares} winnerLocations={locations} onClick={(i)=>this.handleClick(i)} />
+          </div>
+          <div className="game-info">
+            <div>{status}</div>
+            <div><button onClick={()=>this.toggleSort()}> ascending / descending </button></div>
+            <ol reversed={!this.state.sortAscending}>{this.state.sortAscending ? moves : moves.reverse()}</ol>
+          </div>
         </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <div><button onClick={()=>this.toggleSort()}> ascending / descending </button></div>
-          <ol reversed={!this.state.sortAscending}>{this.state.sortAscending ? moves : moves.reverse()}</ol>
-        </div>
-      </div>
+        <Clock/>
+      </React.Fragment>
     );
   }
 }
