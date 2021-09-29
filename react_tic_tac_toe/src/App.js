@@ -3,6 +3,7 @@ import './App.css';
 
 import Board, {calculateWinner} from './components/Board'
 import Clock from './components/Clock'
+import TodoList from './components/TodoList'
 
 
 class Game extends React.Component {
@@ -86,7 +87,10 @@ class Game extends React.Component {
             <ol reversed={!this.state.sortAscending}>{this.state.sortAscending ? moves : moves.reverse()}</ol>
           </div>
         </div>
-        <Clock/>
+        <div className="game">
+          <Clock/>
+          <TodoList/>
+        </div>
       </React.Fragment>
     );
   }
