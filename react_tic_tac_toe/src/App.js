@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css';
 
 import Game from './com_game/Game'
+import TqsdkCom from './com_tqsdk/Tqsdk'
 
 
 class App extends React.Component {
@@ -11,11 +12,11 @@ class App extends React.Component {
   }
 
   render() {
-   
     return (
-      <React.Fragment>
-        <Game></Game>
-      </React.Fragment>
+      <div className='app_root'>
+        <div className='app_col'><TqsdkCom></TqsdkCom></div>
+        {/* <div className='app_col'><Game></Game></div> */}
+      </div>
     );
   }
 }
