@@ -64,31 +64,59 @@ function useTQSDK() {
 //     });
 // }
 
-function Row({symbol}) {
-    const [state, setState] = useState({})
-    // const {setRtnDataEvent} = useTQSDK()
-    const quote = tqsdk.getQuote(symbol)
-    if (tqsdk.isChanging(quote) ) {
-        setState(quote)
-    }
+function Row(props) {
     return <tr>
-        {cols.map((value, index) => <td key={index}>{state[value['col_name']]}</td>)}
+        <td>{props.quote.instrument_id}</td>
+        <td>{props.quote.last_price}</td>
+        <td>{props.quote.datetime}</td>
     </tr>
 }
 
 
 function Table(props) {
+    // console.log(props)
+    // const [tbody, setTbody] = useState([])
     const [symbols, setSymbols] = useState([])
+    const [quotes, setQuotes] = useState([])
 
-    useEffect(() => {
+    useEffect(()=>{
         const symbol_list = []
         for (const key in tqsdk.quotesInfo) {
-            if (['FUTURE', 'FUTURE_CONT'].includes(tqsdk.quotesInfo[key]['class']) && tqsdk.quotesInfo[key]['exchange_id'] === props.exchange_id && !tqsdk.quotesInfo[key]['expired']) {
+            if (tqsdk.quotesInfo[key]['class'] === 'FUTURE' && tqsdk.quotesInfo[key]['exchange_id'] === props.exchange_id && !tqsdk.quotesInfo[key]['expired']) {
+                const quote = tqsdk.getQuote(key)
                 symbol_list.push(key)
+                
+                // tbody.push(<tr key={key}>{cols.map((value, index) => <td key={index}>{quote[value['col_name']]}</td>)}</tr>)
             }
         }
         setSymbols(symbol_list)
     }, [props.exchange_id])
+
+    useEffect(() => {
+        const cb = () => {
+            const quotes = []
+            for (var s of symbols) {
+                quotes.push(tqsdk.getQuote(s))
+            }
+            console.log("1111")
+            setQuotes(quotes)
+        }
+        cb();
+        tqsdk.on("ready", cb)
+        tqsdk.on("rtn_data", cb)
+        return () => tqsdk.off("rtn_data", cb)
+    }, [symbols])
+
+    
+    
+    // const cb = function () {
+        
+    //     // setTbody(tbody)
+    // }
+
+    // const {setRtnDataEvent} = useTQSDK()
+    // setRtnDataEvent(cb)
+
 
     return <table>
         <thead>
@@ -96,7 +124,9 @@ function Table(props) {
             <tr><td colSpan='3'>{props.exchange_id}</td></tr>
         </thead>
         <tbody>
-            {symbols.map((s) => <Row key={s} symbol={s}></Row>)}
+            {quotes.map((s, index) => {
+                return <Row key={index} quote={s}/>
+            })}
         </tbody>
     </table>
 }

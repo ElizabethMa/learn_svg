@@ -140,4 +140,4 @@ class Clock extends React.Component {
     }
 }
 
-export default Clock;
+export default ClockBlock2;
